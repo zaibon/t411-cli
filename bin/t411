@@ -1,0 +1,71 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'commander/import'
+require 'rainbow'
+require 'httparty'
+require 'uri'
+require 'json'
+require 'yaml'
+
+require File.join(File.dirname(__FILE__), "../lib/t411.rb")
+include T411
+
+begin
+  @config = read_config
+rescue
+  puts Rainbow('No configuration file found. Please run "t411 configure" first.').red
+end
+
+program :version, '0.0.1'
+program :description, 'cli T411 that allows to download torrent files from the terminal through T411\'s API'
+
+command "download-serie".to_sym do |c|
+  c.syntax = 't411 download title [season] [episode]'
+  c.summary = 'Download torrents that matches the arguments'
+
+  c.description = "Download torrents that matches the arguments\n"
+  c.description+= "It is important to wrap the title between double quotes to avoid the app to misinterpret it.\n"
+  c.description+= "If a season is passed in arguments only episodes corresponding to this season will be downloaded.\n"
+  c.description+= "If an episode is passed in arguments only the episode from the season will be downloaded"
+
+  c.example 'Download all the episodes of the show Breaking Bad', 't411 download "breaking bad"'
+  c.example 'Download all the episodes of the show The Walking Dead of season 3', 't411 download "the walking dead" 3'
+  c.example 'Download the episode 2 of the season 1 of the show Better Call Saul', 't411 download "better call saul" 1 2'
+
+  c.action do |args, options|
+    if args.count < 1
+      puts Rainbow("You have to pass at least a title. Please try again and run t411 help download if you need help.").red
+      exit(0)
+    end
+
+    episodes_list = episodes_list(args)
+    @config[:t411_token] = auth_t411
+    download_t411([args.first, episodes_list])
+  end
+end
+
+command :configure do |c|
+  c.syntax = 't411 configure'
+  c.summary = 'Configure the app before the first use'
+
+  c.description = "Configure the app before the first use. It creates a .t411 file in the user home directory"
+
+  c.example 'Launch the configuration', 't411 configuration'
+
+  c.action do |args, options|
+    config = {}
+    print Rainbow('T411 login : ').blue
+    config[:t411_user] = STDIN.gets.chomp
+    print Rainbow('T411 password : ').blue
+    config[:t411_pass] = STDIN.gets.chomp
+    print Rainbow('Betaserie API key : ').blue
+    config[:betaserie_key] = STDIN.gets.chomp
+    print "Writing config file... "
+    config = config.to_yaml
+    file = File.open(File.join(File.expand_path('~'), '.t411'), 'w')
+    file.write(config)
+    file.close
+    puts Rainbow("[OK]").green
+  end
+end
