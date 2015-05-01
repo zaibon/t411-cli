@@ -11,7 +11,7 @@ module T411
     episode = args[2]
 
     show_id = show_id(title)
-    
+
     # Then I can call the API to get the episodes list
     uri = "https://api.betaseries.com/shows/episodes?id=#{show_id}"
     uri += "&season=#{season}" unless season.nil?
