@@ -1,4 +1,6 @@
 module T411
+  require 'net/scp'
+
   def read_config
     YAML.load_file(File.join(File.expand_path('~'), '.t411'))
   end
@@ -41,14 +43,18 @@ module T411
   def download_t411(args)
     title = args[0]
     episodes_list = args[1]
+    torrents_file = []
     episodes_list.each do |ep|
       torrents = search_t411(title, ep)
       torrent_id = choose_torrent(torrents)
       response = HTTParty.get("https://api.t411.io/torrents/download/#{torrent_id}", {headers: {'Authorization' => @config[:t411_token]}})
-      file = File.open(File.join(File.expand_path('~'), 'Downloads', "#{title}-#{ep}.torrent"), 'w')
+      path = File.join(File.expand_path('~'), 'Downloads', "#{title}-#{ep}.torrent")
+      file = File.open(path, 'w')
       file.write(response)
       file.close
+      torrents_file << path
     end
+    torrents_file
   end
 
   def search_t411(title, ep)
@@ -66,5 +72,14 @@ module T411
     print "Which torrent do you want ? (1-#{i}) : "
     index = STDIN.gets.chomp.to_i
     torrents[index-1]["id"]
+  end
+
+  def upload_torrent(torrents)
+    Net::SCP.start(@config[:autodownload_host], @config[:autodownload_username] ) do |scp|
+      torrents.each do |torrent|
+        puts "#{torrent} ==> #{@config[:autodownload_path]}"
+        scp.upload! torrent, @config[:autodownload_path]
+      end
+    end
   end
 end
