@@ -41,7 +41,10 @@ command "download-serie".to_sym do |c|
 
     episodes_list = episodes_list(args)
     @config[:t411_token] = auth_t411
-    download_t411([args.first, episodes_list])
+    torrents_path = download_t411([args.first, episodes_list])
+    if @config[:autodownload_enable] == true
+      upload_torrent(torrents_path)
+    end
   end
 end
 
@@ -61,6 +64,22 @@ command :configure do |c|
     config[:t411_pass] = STDIN.gets.chomp
     print Rainbow('Betaserie API key : ').blue
     config[:betaserie_key] = STDIN.gets.chomp
+    loop do
+      print Rainbow('enable auto upload torrent to a remote server ? (y/n) : ').blue
+      res = STDIN.gets.chomp
+      if res.downcase == "y"
+        print Rainbow('server host : ').blue
+        config[:autodownload_host] = STDIN.gets.chomp
+        print Rainbow('server username : ').blue
+        config[:autodownload_username] = STDIN.gets.chomp
+        print Rainbow('server folder : ').blue
+        config[:autodownload_path] = STDIN.gets.chomp
+        config[:autodownload_enable] = true
+        break
+      elsif res.downcase == 'n'
+        break
+      end
+    end
     print "Writing config file... "
     config = config.to_yaml
     file = File.open(File.join(File.expand_path('~'), '.t411'), 'w')
