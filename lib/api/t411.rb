@@ -12,11 +12,14 @@ module API
       title = args[0]
       episodes_list = args[1]
       torrents_file = []
+      torrent_ids = []
       episodes_list.each do |ep|
         torrents = search(title, ep)
-        torrent_id = choose_torrent(torrents)
+        torrent_ids << choose_torrent(torrents)
+      end
+      torrent_ids.each do |torrent_id|
         response = HTTParty.get("#{@@base_url}/torrents/download/#{torrent_id}", {headers: {'Authorization' => @config[:t411_token]}})
-        path = File.join(File.expand_path('~'), 'Downloads', "#{title}-#{ep}.torrent")
+        path = File.join(File.expand_path('~'), 'Downloads', "#{torrent_id}.torrent")
         file = File.open(path, 'w')
         file.write(response)
         file.close
