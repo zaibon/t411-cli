@@ -11,7 +11,6 @@ module API
     def download(args)
       title = args[0]
       episodes_list = args[1]
-      torrents_file = []
       torrent_ids = []
       episodes_list.each do |ep|
         torrents = search(title, ep)
@@ -19,15 +18,24 @@ module API
           torrent_ids << choose_torrent(torrents)
         end
       end
+
+      threads = []
       torrent_ids.each do |torrent_id|
-        response = HTTParty.get("#{@@base_url}/torrents/download/#{torrent_id}", {headers: {'Authorization' => @config[:t411_token]}})
-        path = File.join(File.expand_path('~'), 'Downloads', "#{torrent_id}.torrent")
-        file = File.open(path, 'w')
-        file.write(response)
-        file.close
-        torrents_file << path
+        t = Thread.new do
+          print"Get #{@@base_url}/torrents/download/#{torrent_id}\n"
+          response = HTTParty.get("#{@@base_url}/torrents/download/#{torrent_id}", {headers: {'Authorization' => @config[:t411_token]}})
+          path = File.join(File.expand_path('~'), 'Downloads', "#{torrent_id}.torrent")
+          file = File.open(path, 'w')
+          file.write(response)
+          file.close
+
+          if @config[:autodownload_enable] == true
+            upload_torrent(path)
+          end
+        end
+        threads << t
       end
-      torrents_file
+      threads.each { |thr| thr.join }
     end
 
     def search(title, ep)
