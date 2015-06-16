@@ -15,7 +15,9 @@ module API
       torrent_ids = []
       episodes_list.each do |ep|
         torrents = search(title, ep)
-        torrent_ids << choose_torrent(torrents)
+        if torrents.count > 0
+          torrent_ids << choose_torrent(torrents)
+        end
       end
       torrent_ids.each do |torrent_id|
         response = HTTParty.get("#{@@base_url}/torrents/download/#{torrent_id}", {headers: {'Authorization' => @config[:t411_token]}})
