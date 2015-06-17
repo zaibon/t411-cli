@@ -20,8 +20,5 @@ command "download-serie".to_sym do |c|
     episodes_list = episodes_list(args)
     @config[:t411_token] = auth
     torrents_path = download([args.first, episodes_list])
-    if @config[:autodownload_enable] == true
-      upload_torrent(torrents_path)
-    end
   end
 end
