@@ -4,4 +4,4 @@ require File.join(File.dirname(__FILE__), "../lib/t411-cli.rb")
 
 include T411Cli
 
-init_cli()
+start()

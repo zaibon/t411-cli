@@ -8,9 +8,7 @@ module API
       response['token']
     end
 
-    def download(args)
-      title = args[0]
-      episodes_list = args[1]
+    def download_torrents(title, episodes_list)
       torrent_ids = []
       episodes_list.each do |ep|
         torrents = search(title, ep)
@@ -18,7 +16,10 @@ module API
           torrent_ids << choose_torrent(torrents)
         end
       end
+      download(torrent_ids)
+    end
 
+    def download(torrent_ids)
       threads = []
       torrent_ids.each do |torrent_id|
         t = Thread.new do

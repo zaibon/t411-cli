@@ -13,12 +13,12 @@ command "download-serie".to_sym do |c|
 
   c.action do |args, options|
     if args.count < 1
-      puts Rainbow("You have to pass at least a title. Please try again and run t411 help download if you need help.").red
+      puts Rainbow("You have to pass at least a title. Please try again and run t411 help download-serie if you need help.").red
       exit(0)
     end
 
     episodes_list = episodes_list(args)
     @config[:t411_token] = auth
-    torrents_path = download([args.first, episodes_list])
+    torrents_path = download_torrents(args.first, episodes_list)
   end
 end
