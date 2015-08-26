@@ -20,12 +20,10 @@ module Utils
     torrents[index-1]["id"]
   end
 
-  def upload_torrent(torrents)
+  def upload_torrent(torrent)
     Net::SCP.start(@config[:autodownload_host], @config[:autodownload_username] ) do |scp|
-      torrents.each do |torrent|
-        puts "#{torrent} ==> #{@config[:autodownload_path]}"
-        scp.upload! torrent, @config[:autodownload_path]
-      end
+      puts "#{torrent} ==> #{@config[:autodownload_path]}"
+      scp.upload! torrent, @config[:autodownload_path]
     end
   end
 end
