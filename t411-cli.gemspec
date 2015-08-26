@@ -1,6 +1,9 @@
+$:.push File.expand_path("../lib", __FILE__)
+require 't411-cli/version'
+
 Gem::Specification.new do |s|
   s.name        = 't411-cli'
-  s.version     = '0.0.2'
+  s.version     = T411Cli::VERSION.dup
   s.date        = '2015-02-24'
   s.summary     = "t411-cli"
   s.description = "t411-cli to downloads torrents from t411 tracker in terminal"
@@ -10,7 +13,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.files       = `git ls-files`.split($\)
-  s.executables << "t411"
+  s.executables << "t411-cli"
 
   s.add_dependency 'commander', '~> 4.3.1'
   s.add_dependency 'rainbow', '~> 2.0.0'
