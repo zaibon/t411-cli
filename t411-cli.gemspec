@@ -1,3 +1,4 @@
+$:.push File.expand_path("../lib", __FILE__)
 require 't411-cli/version'
 
 Gem::Specification.new do |s|
@@ -12,7 +13,7 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
 
   s.files       = `git ls-files`.split($\)
-  s.executables << "t411"
+  s.executables << "t411-cli"
 
   s.add_dependency 'commander', '~> 4.3.1'
   s.add_dependency 'rainbow', '~> 2.0.0'
