@@ -1,16 +1,23 @@
 module Utils
+  HEADERS = ['#', 'ID', 'Name', 'Seeders']
   def choose_torrent(torrents)
     i = 0
-    torrents = sort_by_seeder(torrents)
-    torrents.each do |torrent|
-      i += 1
-      str = "#{i}. #{torrent["id"]} - #{torrent["name"]} #{torrent["seeders"]}/#{torrent["leechers"]}"
-      str = format_string(str)
-      puts str
-    end
+    puts_torrents(torrents)
     print "Which torrent do you want ? (1-#{i}) : "
     index = STDIN.gets.chomp.to_i
     torrents[index-1]["id"]
+  end
+
+  def puts_torrents(torrents)
+    rows = []
+    i = 1
+    torrents.each do |torrent|
+      rows << [i, torrent['id'], format_name(torrent['name']), torrent['seeders']]
+      i += 1
+    end
+    table = Terminal::Table.new :headings => HEADERS, :rows => rows
+    table.align_column(3, :right)
+    puts table
   end
 
   def upload_torrent(torrent)
@@ -20,7 +27,7 @@ module Utils
     end
   end
 
-  def format_string(str)
+  def format_name(str)
     scans = str.scan(/VOSTFR|FASTSUB|VO|FRENCH/)
     scans.each do |scan|
       str.sub!(scan, Rainbow(scan).yellow.underline)

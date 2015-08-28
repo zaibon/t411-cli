@@ -6,6 +6,7 @@ command "download-serie".to_sym do |c|
   c.description+= "It is important to wrap the title between double quotes to avoid the app to misinterpret it.\n"
   c.description+= "If a season is passed in arguments only episodes corresponding to this season will be downloaded.\n"
   c.description+= "If an episode is passed in arguments only the episode from the season will be downloaded"
+  c.option '--auto', 'Add this flag to let the gem download everything without asking any inputs !'
 
   c.example 'Download all the episodes of the show Breaking Bad', 't411 download "breaking bad"'
   c.example 'Download all the episodes of the show The Walking Dead of season 3', 't411 download "the walking dead" 3'
@@ -19,6 +20,6 @@ command "download-serie".to_sym do |c|
 
     episodes_list = episodes_list(args)
     @config[:t411_token] = auth
-    torrents_path = download_torrents(args.first, episodes_list)
+    torrents_path = download_torrents(args.first, episodes_list, options.auto)
   end
 end

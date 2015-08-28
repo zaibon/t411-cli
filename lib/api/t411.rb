@@ -8,12 +8,17 @@ module API
       response['token']
     end
 
-    def download_torrents(title, episodes_list)
+    def download_torrents(title, episodes_list, auto)
       torrent_ids = []
       episodes_list.each do |ep|
         torrents = search(title, ep)
         if torrents.count > 0
-          torrent_ids << choose_torrent(torrents)
+          torrents = sort_by_seeder(torrents)
+          if auto
+            torrent_ids << torrents.first['id']
+          else
+            torrent_ids << choose_torrent(torrents)
+          end
         end
       end
       download(torrent_ids)
