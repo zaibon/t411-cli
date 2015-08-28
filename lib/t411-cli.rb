@@ -1,5 +1,6 @@
 require 'commander/import'
 require 'rainbow'
+require 'terminal-table'
 require 'httparty'
 require 'uri'
 require 'json'
