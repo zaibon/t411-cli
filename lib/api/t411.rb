@@ -13,6 +13,7 @@ module API
       episodes_list.each do |ep|
         torrents = search(title, ep)
         if torrents.count > 0
+          torrents = sort_by_seeder(torrents)
           if auto
             torrent_ids << torrents.first['id']
           else
