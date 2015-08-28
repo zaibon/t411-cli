@@ -15,11 +15,11 @@ Gem::Specification.new do |s|
   s.files       = `git ls-files`.split($\)
   s.executables << "t411-cli"
 
-  s.add_dependency 'commander', '~> 4.3.1'
-  s.add_dependency 'rainbow', '~> 2.0.0'
-  s.add_dependency 'httparty', '~> 0.13.5'
-  s.add_dependency 'net-scp', '~> 1.2.1'
-  s.add_dependency 'terminal-table', '~> 1.5.2'
+  s.add_dependency 'commander', '~> 4.3'
+  s.add_dependency 'rainbow', '~> 2.0'
+  s.add_dependency 'httparty', '~> 0.13'
+  s.add_dependency 'net-scp', '~> 1.2'
+  s.add_dependency 'terminal-table', '~> 1.5'
 
   s.add_development_dependency "bundler", "~> 1.9"
   s.add_development_dependency "rake", "~> 10.4"
