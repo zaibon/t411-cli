@@ -19,21 +19,15 @@ module T411Cli
 
   def start
     begin
-      @config = read_config()
+      @config = read_config
     rescue
-      puts Rainbow('No configuration file found. Please run "t411 configure" first.').red
-      exit!
+      create_config_file
     end
 
     program :version, T411Cli::VERSION 
     program :description, 'cli T411 that allows to download torrent files from the terminal through T411\'s API'
-  end
 
-  def read_config
-    YAML.load_file(File.join(File.expand_path('~'), '.t411'))
+    require File.join(File.dirname(__FILE__), "../lib/commands/download.rb")
   end
-
 end
 
-require File.join(File.dirname(__FILE__), "../lib/commands/config.rb")
-require File.join(File.dirname(__FILE__), "../lib/commands/download.rb")

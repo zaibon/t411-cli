@@ -86,7 +86,30 @@ module Utils
     autodownload_path = STDIN.gets.chomp
     autodownload_path
   end
+  
+  def read_config
+    YAML.load_file(File.join(File.expand_path('~'), '.t411'))
+  end
 
+  def create_config_file
+    puts Rainbow("None configuration file found. Let's created it.").yellow
+    config = {}
+    config[:t411_user] = get_login
+    config[:t411_pass] = get_password
+    config[:betaserie_key] = get_api_key
+    loop do
+      if autodownload?
+        config[:autodownload_host] = get_server_host
+        config[:autodownload_username] = get_server_user
+        config[:autodownload_path] = get_server_path
+        config[:autodownload_enable] = true
+        break
+      else
+        break
+      end
+    end
+    write_config_file(config)
+  end
 
   def write_config_file(data)
     print Rainbow("Writing config file...").blue
@@ -94,6 +117,6 @@ module Utils
     file = File.open(File.join(File.expand_path('~'), '.t411'), 'w')
     file.write(data)
     file.close
-    puts Rainbow("[OK]").green
+    puts Rainbow("[OK]\n\n").green
   end
 end
