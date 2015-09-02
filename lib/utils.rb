@@ -1,7 +1,7 @@
 module Utils
   HEADERS = ['#', 'ID', 'Name', 'Seeders']
   def choose_torrent(torrents)
-    i = 0
+    i = torrents.count
     puts_torrents(torrents)
     print "Which torrent do you want ? (1-#{i}) : "
     index = STDIN.gets.chomp.to_i
@@ -40,6 +40,7 @@ module Utils
   end
 
   def sort_by_seeder(torrents)
+    return if torrents.empty?
     torrents.sort{|t1, t2| t2['seeders'].to_i <=> t1['seeders'].to_i}
   end
 
