@@ -17,4 +17,4 @@ At the moment, the gem allows you to :
 
 ## And then ?
 
-Then you can use the gem using the command t411-cli (don't forget to add the gems bin directory in your $PATH). The first thing you HAVE to do is to run the config command to create the .t411 file needed to execute the gem.
+Then you can use the gem using the command t411-cli (don't forget to add the gems bin directory in your $PATH). 
