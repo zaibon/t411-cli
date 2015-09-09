@@ -70,6 +70,12 @@ module Utils
     res.downcase == "y"
   end
 
+  def use_redis?
+    print Rainbow('use redis to cache series data ? (y/n) : ').blue
+    res = STDIN.gets.chomp
+    res.downcase == "y"
+  end
+
   def get_server_host
     print Rainbow('server host : ').blue
     autodownload_host = STDIN.gets.chomp
@@ -87,6 +93,26 @@ module Utils
     autodownload_path = STDIN.gets.chomp
     autodownload_path
   end
+
+  def get_redis_host
+    print Rainbow('redis host : ').blue
+    redis_host = STDIN.gets.chomp
+    redis_host
+  end
+
+  def get_redis_port
+    print Rainbow('redis port (let empty to use the default port) : ').blue
+    redis_port = STDIN.gets.chomp
+    redis_port = 6379 if redis_port.empty?
+    redis_port
+  end
+
+  def get_redis_db
+    print Rainbow('redis db (let empty to use the default db) : ').blue
+    redis_db = STDIN.gets.chomp
+    redis_db = 0 if redis_db.empty?
+    redis_db
+  end
   
   def read_config
     YAML.load_file(File.join(File.expand_path('~'), '.t411'))
@@ -98,16 +124,17 @@ module Utils
     config[:t411_user] = get_login
     config[:t411_pass] = get_password
     config[:betaserie_key] = get_api_key
-    loop do
-      if autodownload?
-        config[:autodownload_host] = get_server_host
-        config[:autodownload_username] = get_server_user
-        config[:autodownload_path] = get_server_path
-        config[:autodownload_enable] = true
-        break
-      else
-        break
-      end
+    if autodownload?
+      config[:autodownload_host] = get_server_host
+      config[:autodownload_username] = get_server_user
+      config[:autodownload_path] = get_server_path
+      config[:autodownload_enable] = true
+    end
+    if use_redis?
+      config[:redis_host] = get_redis_host
+      config[:redis_port] = get_redis_port
+      config[:redis_db] = get_redis_db
+      config[:redis_enable] = true
     end
     write_config_file(config)
   end
