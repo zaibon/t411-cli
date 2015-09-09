@@ -11,6 +11,7 @@ require File.join(File.dirname(__FILE__), "/api/betaseries.rb")
 require File.join(File.dirname(__FILE__), "/api/t411.rb")
 require File.join(File.dirname(__FILE__), "utils.rb")
 require File.join(File.dirname(__FILE__), "t411-cli/version.rb")
+require File.join(File.dirname(__FILE__), "setup.rb")
 
 module T411Cli
   include API::Betaseries
@@ -23,9 +24,6 @@ module T411Cli
     rescue
       create_config_file
     end
-
-    program :version, T411Cli::VERSION 
-    program :description, 'cli T411 that allows to download torrent files from the terminal through T411\'s API'
 
     require File.join(File.dirname(__FILE__), "../lib/commands/download.rb")
   end
