@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'net-scp', '~> 1.2'
   s.add_dependency 'terminal-table', '~> 1.5'
 
-  s.add_development_dependency "bundler", "~> 1.9"
+  s.add_development_dependency "bundler", "~> 2.6"
   s.add_development_dependency "rake", "~> 10.4"
   s.add_development_dependency "rspec", "~> 3.3"
 end
